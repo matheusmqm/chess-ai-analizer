@@ -1,0 +1,88 @@
+/* Tokens do Chess AI Analyzer — tema único, claro, inspirado no chess.com (verde, bege e branco). */
+@font-face{font-family:"Bricolage Grotesque";src:url("/fonts/BricolageGrotesque-Variable.woff2") format("woff2");font-weight:200 800;font-style:normal;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url("/fonts/JetBrainsMono-Variable.woff2") format("woff2");font-weight:100 800;font-style:normal;font-display:swap}
+:root{
+  /* Superfícies e texto (branco e cinza-areia) */
+  --bg:#f3f2ee;
+  --surface:#ffffff;
+  --surface-raised:#fafaf8;
+  --surface-hover:#ecebe5;
+  --border:#dcdad2;
+  --border-strong:#8a8880;
+  --ink:#262522;
+  --ink-muted:#5a5852;
+  --ink-subtle:#6c6a63;
+
+  /* Verde do chess.com: botões, lance selecionado, foco */
+  --accent:#81b64c;
+  --accent-hover:#95c65f;
+  --accent-pressed:#6fa03d;
+  --on-accent:#1d2610;
+  --accent-edge:#45753c;
+  --accent-text:#44711f;
+  --accent-subtle:#e7f0d8;
+
+  --danger:#b3182c;
+  --success:#33731c;
+
+  /* Qualidade dos lances (as 5 base; as demais ficam em index.css) */
+  --quality-best:#0a7566;
+  --quality-good:#1d5fbf;
+  --quality-inaccuracy:#7d6500;
+  --quality-mistake:#b2430a;
+  --quality-blunder:#c2182f;
+  --on-quality:#ffffff;
+
+  /* Tabuleiro do chess.com: bege e verde */
+  --board-light:#ebecd0;
+  --board-dark:#739552;
+  --board-last-move:#ffff3380;
+  --board-selected:#ffff33b3;
+  --arrow-best:#19e0bf;
+  --arrow-played:#ff6b5e;
+  --board-outline:#262522;
+  --piece-white:#f7f4ea;
+  --piece-black:#1b2629;
+  --eval-white:#ffffff;
+  --eval-black:#403d39;
+
+  --shadow-pop:0 12px 32px rgba(38,37,34,0.16), 0 0 0 1px #dcdad2;
+
+  --space-1:4px;
+  --space-2:8px;
+  --space-3:12px;
+  --space-4:16px;
+  --space-5:20px;
+  --space-6:24px;
+  --space-8:32px;
+  --space-10:40px;
+  --space-12:48px;
+  --space-16:64px;
+  --radius-xs:4px;
+  --radius-sm:6px;
+  --radius-md:10px;
+  --radius-lg:14px;
+  --radius-pill:999px;
+  --control-sm:28px;
+  --control-md:36px;
+  --control-lg:44px;
+  --badge-sm:16px;
+  --badge-md:22px;
+  --stroke-1:1px;
+  --stroke-2:2px;
+  --font-sans:"Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+.display{font-family:var(--font-sans);font-size:48px;line-height:52px;font-weight:700;letter-spacing:-0.02em;}
+.h1{font-family:var(--font-sans);font-size:32px;line-height:38px;font-weight:700;letter-spacing:-0.015em;}
+.h2{font-family:var(--font-sans);font-size:24px;line-height:30px;font-weight:650;letter-spacing:-0.01em;}
+.h3{font-family:var(--font-sans);font-size:18px;line-height:24px;font-weight:650;}
+.body-lg{font-family:var(--font-sans);font-size:16px;line-height:26px;font-weight:420;}
+.body{font-family:var(--font-sans);font-size:14px;line-height:21px;font-weight:420;}
+.body-sm{font-family:var(--font-sans);font-size:13px;line-height:19px;font-weight:420;}
+.label{font-family:var(--font-sans);font-size:13px;line-height:16px;font-weight:600;letter-spacing:0.005em;}
+.caption{font-family:var(--font-sans);font-size:12px;line-height:16px;font-weight:500;}
+.san{font-family:var(--font-mono);font-size:15px;line-height:20px;font-weight:500;}
+.san-sm{font-family:var(--font-mono);font-size:13px;line-height:18px;font-weight:500;}
+.eval{font-family:var(--font-mono);font-size:13px;line-height:16px;font-weight:600;}
+.eval-lg{font-family:var(--font-mono);font-size:22px;line-height:26px;font-weight:600;}

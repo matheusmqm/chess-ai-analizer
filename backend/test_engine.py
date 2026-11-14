@@ -141,3 +141,9 @@ def test_best_facts_without_material_change_says_so():
     board = chess.Board()
     out = facts.best_facts(board, [chess.Move.from_uci("e2e4")], eval_before=20)
     assert any("não perde material" in f for f in out)
+
+
+def test_classify_move_forced_has_priority():
+    assert _cm(forced=True, loss=0, is_best=True) == "forced"
+    assert _cm(forced=True, ply=3) == "forced"  # vale até na abertura
+    assert _cm(forced=False, is_best=True) == "best"

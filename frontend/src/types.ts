@@ -2,6 +2,7 @@ export type Classification =
   | 'brilliant'
   | 'great'
   | 'book'
+  | 'forced'
   | 'best'
   | 'excellent'
   | 'good'

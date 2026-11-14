@@ -1,5 +1,4 @@
 import {
-  CartesianGrid,
   Line,
   LineChart,
   ReferenceDot,
@@ -8,7 +7,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import { CLASS_COLOR, isPlayerError } from './labels'
+import { isPlayerError, qualityColor, toWhite } from './labels'
 import type { Move } from './types'
 
 interface Props {
@@ -25,10 +24,6 @@ interface Point {
   color: string | null // cor do ponto se for erro do jogador
 }
 
-function toWhite(move: Move, cp: number): number {
-  return move.color === 'white' ? cp : -cp
-}
-
 function buildPoints(moves: Move[]): Point[] {
   const clamp = (cp: number) => Math.max(-LIMIT, Math.min(LIMIT, cp))
   const points: Point[] = [{ ply: 0, eval: clamp(toWhite(moves[0], moves[0].eval_before)), color: null }]
@@ -36,7 +31,7 @@ function buildPoints(moves: Move[]): Point[] {
     points.push({
       ply: i + 1,
       eval: clamp(toWhite(m, m.eval_after)),
-      color: isPlayerError(m) ? CLASS_COLOR[m.classification] : null,
+      color: isPlayerError(m) ? qualityColor(m.classification) : null,
     })
   })
   return points
@@ -47,31 +42,54 @@ export default function EvalChart({ moves, ply, onSelect }: Props) {
   const data = buildPoints(moves)
 
   return (
-    <div className="eval-chart">
-      <ResponsiveContainer width="100%" height={180}>
+    <div className="eval-chart" role="img" aria-label="Gráfico de avaliação da partida. Clique para ir a um lance.">
+      <ResponsiveContainer width="100%" height={168}>
         <LineChart
           data={data}
+          margin={{ top: 12, right: 12, bottom: 8, left: 0 }}
           onClick={(state) => {
             const i = Number(state?.activeTooltipIndex)
             if (Number.isFinite(i)) onSelect(i)
           }}
         >
-          <CartesianGrid stroke="#333" />
           <XAxis dataKey="ply" hide />
-          <YAxis domain={[-LIMIT, LIMIT]} width={40} stroke="#999" />
-          <ReferenceLine y={0} stroke="#888" />
+          <YAxis
+            domain={[-LIMIT, LIMIT]}
+            ticks={[-500, 0, 500]}
+            tickFormatter={(v: number) => (v > 0 ? `+${v / 100}` : String(v / 100))}
+            width={36}
+            axisLine={false}
+            tickLine={false}
+            tick={{ style: { fontFamily: 'var(--font-mono)', fontSize: 12, fill: 'var(--ink-subtle)' } }}
+          />
+          <ReferenceLine y={0} stroke="var(--border-strong)" strokeDasharray="4 4" />
           <Line
             type="monotone"
             dataKey="eval"
-            stroke="#8ab4f8"
+            stroke="var(--accent-edge)"
+            strokeWidth={2}
             dot={(props) => {
               const { cx, cy, payload, index } = props
               if (!payload.color) return <g key={index} />
-              return <circle key={index} cx={cx} cy={cy} r={4} fill={payload.color} />
+              return (
+                <circle
+                  key={index}
+                  cx={cx}
+                  cy={cy}
+                  r={4}
+                  style={{ fill: payload.color, stroke: 'var(--surface)', strokeWidth: 1.5 }}
+                />
+              )
             }}
+            activeDot={false}
             isAnimationActive={false}
           />
-          <ReferenceDot x={ply} y={data[ply].eval} r={6} fill="#fff" stroke="#3d5a80" />
+          <ReferenceDot
+            x={ply}
+            y={data[ply].eval}
+            r={6}
+            style={{ fill: 'var(--accent)', stroke: 'var(--accent-edge)', strokeWidth: 2 }}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>

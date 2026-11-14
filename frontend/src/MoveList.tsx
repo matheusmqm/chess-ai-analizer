@@ -1,4 +1,6 @@
-import { CLASS_COLOR, CLASS_SYMBOL } from './labels'
+import { useEffect, useRef } from 'react'
+import { QualityBadge } from './Quality'
+import { QUALITY } from './labels'
 import type { Move } from './types'
 
 interface Props {
@@ -7,21 +9,30 @@ interface Props {
   onSelect: (ply: number) => void
 }
 
-function MoveButton({ move, index, ply, onSelect }: {
+function MoveCell({ move, index, ply, onSelect }: {
   move: Move
   index: number
   ply: number
   onSelect: (ply: number) => void
 }) {
-  const c = move.classification
+  const selected = ply === index + 1
+  const ref = useRef<HTMLButtonElement>(null)
+
+  // Mantém o lance selecionado visível quando se navega pelo teclado.
+  useEffect(() => {
+    if (selected) ref.current?.scrollIntoView({ block: 'nearest' })
+  }, [selected])
+
   return (
     <button
-      className={`move ${ply === index + 1 ? 'selected' : ''}`}
-      style={{ color: CLASS_COLOR[c], fontWeight: 'bold' }}
+      ref={ref}
+      className={`move-cell ${selected ? 'selected' : ''}`}
       onClick={() => onSelect(index + 1)}
+      aria-current={selected ? 'true' : undefined}
+      aria-label={`${move.san}, ${QUALITY[move.classification].label}`}
     >
-      {move.san}
-      {` ${CLASS_SYMBOL[c]}`}
+      <span className="san">{move.san}</span>
+      <QualityBadge quality={move.classification} />
     </button>
   )
 }
@@ -31,13 +42,15 @@ export default function MoveList({ moves, ply, onSelect }: Props) {
   for (let i = 0; i < moves.length; i += 2) rows.push(i)
 
   return (
-    <div className="move-list">
+    <div className="move-list" role="list" aria-label="Lances da partida">
       {rows.map((i) => (
-        <div className="move-row" key={i}>
-          <span className="move-number">{moves[i].move_number}.</span>
-          <MoveButton move={moves[i]} index={i} ply={ply} onSelect={onSelect} />
-          {moves[i + 1] && (
-            <MoveButton move={moves[i + 1]} index={i + 1} ply={ply} onSelect={onSelect} />
+        <div className="move-row" role="listitem" key={i}>
+          <span className="move-number san-sm">{moves[i].move_number}</span>
+          <MoveCell move={moves[i]} index={i} ply={ply} onSelect={onSelect} />
+          {moves[i + 1] ? (
+            <MoveCell move={moves[i + 1]} index={i + 1} ply={ply} onSelect={onSelect} />
+          ) : (
+            <span />
           )}
         </div>
       ))}

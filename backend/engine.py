@@ -84,8 +84,11 @@ def classify_move(
     ply: int,
     prev_opponent_loss: int,
     recapture: bool = False,
+    forced: bool = False,
 ) -> str:
     """Classe estilo chess.com. `gap` = quanto o 2º melhor lance do motor é pior que o melhor."""
+    if forced:
+        return "forced"  # único lance legal: não há escolha a avaliar
     if loss >= 50:
         # "Chance perdida": o adversário errou, você estava melhor e não aproveitou.
         if 100 <= loss < 300 and prev_opponent_loss >= 150 and eval_before >= 150:
@@ -158,6 +161,7 @@ def analyze_game(pgn: str, player_color: chess.Color) -> list[dict]:
             san = board.san(played)
             sacrifice = is_sacrifice(board, played)
             is_capture = board.is_capture(played)
+            forced = board.legal_moves.count() == 1
             recapture = is_capture and played.to_square == prev_capture_square
 
             board_before = board.copy(stack=False)
@@ -180,6 +184,7 @@ def analyze_game(pgn: str, player_color: chess.Color) -> list[dict]:
                 ply=len(moves) + 1,
                 prev_opponent_loss=prev_loss,
                 recapture=recapture,
+                forced=forced,
             )
             # Fatos concretos só para os erros do jogador (é o que o LLM vai explicar).
             explainable = mover == player_color and loss >= 100
