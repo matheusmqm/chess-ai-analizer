@@ -13,5 +13,7 @@ dist/
 
 # Banco local
 *.db
-docs
+docs/COMMITS.md
+docs/TAREFAS.md
+.playwright-mcp/
 CLAUDE.md
